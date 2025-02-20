@@ -1,0 +1,1 @@
+from .tag_config import START_TAG, STOP_TAG
