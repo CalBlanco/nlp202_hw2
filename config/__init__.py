@@ -1,1 +1,2 @@
-from .tag_config import START_TAG, STOP_TAG
+from .tag_config import *
+from .device_config import *

@@ -1,6 +1,7 @@
 import torch
 
-from config import START_TAG, STOP_TAG
+from config import START_TAG, STOP_TAG, device
+
 
 def argmax(vec):
     # return the argmax as a python int
@@ -10,7 +11,7 @@ def argmax(vec):
 
 def prepare_sequence(seq, to_ix):
     idxs = [to_ix[w] for w in seq]
-    return torch.tensor(idxs, dtype=torch.long)
+    return torch.tensor(idxs, dtype=torch.long, device=device)
 
 
 # Compute log sum exp in a numerically stable way for the forward algorithm
