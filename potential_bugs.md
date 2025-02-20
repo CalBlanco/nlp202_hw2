@@ -1,0 +1,3 @@
+- Tensor operations mixing different devices
+- Memory leaks if not properly clearing cache on MPS
+- Potential device mismatch between model and input data 

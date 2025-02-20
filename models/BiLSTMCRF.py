@@ -37,12 +37,13 @@ class BiLSTM_CRF(nn.Module):
         self.hidden = self.init_hidden()
 
     def init_hidden(self):
-        return (torch.randn(2, 1, self.hidden_dim // 2),
-                torch.randn(2, 1, self.hidden_dim // 2))
+        device = next(self.parameters()).device
+        return (torch.randn(2, 1, self.hidden_dim // 2, device=device),
+                torch.randn(2, 1, self.hidden_dim // 2, device=device))
 
     def _forward_alg(self, feats):
-        # Do the forward algorithm to compute the partition function
-        init_alphas = torch.full((1, self.tagset_size), -10000.)
+        device = next(self.parameters()).device
+        init_alphas = torch.full((1, self.tagset_size), -10000., device=device)
         # START_TAG has all of the score.
         init_alphas[0][self.tag_to_ix[START_TAG]] = 0.
 
@@ -80,9 +81,9 @@ class BiLSTM_CRF(nn.Module):
         return lstm_feats
 
     def _score_sentence(self, feats, tags):
-        # Gives the score of a provided tag sequence
-        score = torch.zeros(1)
-        tags = torch.cat([torch.tensor([self.tag_to_ix[START_TAG]], dtype=torch.long), tags])
+        device = next(self.parameters()).device
+        score = torch.zeros(1, device=device)
+        tags = torch.cat([torch.tensor([self.tag_to_ix[START_TAG]], dtype=torch.long, device=device), tags])
         for i, feat in enumerate(feats):
             score = score + \
                 self.transitions[tags[i + 1], tags[i]] + feat[tags[i + 1]]
@@ -90,10 +91,11 @@ class BiLSTM_CRF(nn.Module):
         return score
 
     def _viterbi_decode(self, feats):
+        device = next(self.parameters()).device
         backpointers = []
 
         # Initialize the viterbi variables in log space
-        init_vvars = torch.full((1, self.tagset_size), -10000.)
+        init_vvars = torch.full((1, self.tagset_size), -10000., device=device)
         init_vvars[0][self.tag_to_ix[START_TAG]] = 0
 
         # forward_var at step i holds the viterbi variables for step i-1
