@@ -1,1 +1,1 @@
-from .BiLSTMCRF import BiLSTM_CRF
+from .BiLSTM import BiLSTM_CRF
